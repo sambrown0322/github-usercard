@@ -3,7 +3,8 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-
+import axios from "axios";
+const entryPoint = document.querySelector(".cards");
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -28,7 +29,13 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  "beadelrosario",
+  "zavier-lambda",
+  "timrexjeff",
+  "tetondan",
+  "dustinmyers",
+];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,7 +56,49 @@ const followersArray = [];
       </div>
     </div>
 */
+function github(object) {
+  object = object.data;
+  const card = document.createElement("div");
+  const image = document.createElement("img");
+  const cardInfo = document.createElement("div");
+  const name = document.createElement("h3");
+  const username = document.createElement("p");
+  const location = document.createElement("p");
+  const profile = document.createElement("p");
+  const link = document.createElement("a");
+  const followers = document.createElement("p");
+  const following = document.createElement("p");
+  const bio = document.createElement("p");
 
+  card.classList.add("card");
+  cardInfo.classList.add("card-info");
+  name.classList.add("name");
+  username.classList.add("username");
+
+  card.appendChild(image);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(username);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(link);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  image.src = object.avatar_url;
+  name.textContent = object.name;
+  username.textContent = object.login;
+  location.textContent = `Location: ${object.location}`;
+  profile.textContent = "Profile:";
+  link.href = object.html_url;
+  link.textContent = object.html_url;
+  followers.textContent = `Followers: ${object.followers}`;
+  following.textContent = `Following: ${object.following}`;
+  bio.textContent = `Bio: ${object.bio}`;
+
+  return card;
+}
 /*
   List of LS Instructors Github username's:
     tetondan
@@ -58,3 +107,51 @@ const followersArray = [];
     luishrd
     bigknell
 */
+// const me = {
+//   avatar_url: "https://avatars1.githubusercontent.com/u/65981760?v=4",
+//   name: "Samuel Brown",
+//   login: "sambrown0322",
+//   location: "Utah",
+//   followers: 2,
+//   following: 4,
+//   html_url: "https://github.com/sambrown0322",
+//   bio: "San Diego, CA -> Utah\r\nWrestler, gamer, sport + music fanatic.",
+// };
+
+// const me = "https://api.github.com/users/sambrown0322";
+
+// axios
+//   .get(me)
+//   .then((value) => {
+//     entryPoint.appendChild(github(value));
+//   })
+
+//   .catch((error) => {
+//     console.log(error);
+//   });
+// followersArray.forEach((object) => {
+//   const them = `https://api.github.com/users/${object}`;
+//   axios
+//     .get(them)
+//     .then((value) => {
+//       entryPoint.appendChild(github(value));
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// });
+function getFriends(name) {
+  const them = `https://api.github.com/users/${name}`;
+  axios
+    .get(them)
+    .then((value) => {
+      entryPoint.appendChild(github(value));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+document.querySelector("body").addEventListener("click", () => {
+  getFriends("zavier-lambda");
+  getFriends("beaadelrosario");
+});
